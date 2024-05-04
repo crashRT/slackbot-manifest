@@ -3,7 +3,7 @@ from dotenv import load_dotenv
 from slack_bolt import App
 
 # BOT_NUMの数だけSlack Appを作成する
-BOT_NUM = 1
+BOT_NUM = 10
 
 load_dotenv(".env")
 TOKEN = os.getenv('TOKEN')
@@ -39,7 +39,7 @@ for i in range(BOT_NUM):
     },
     "features": {
       "bot_user": {
-          "display_name":"hoge"
+          "display_name":app_name
       },
     },
     "settings": {
