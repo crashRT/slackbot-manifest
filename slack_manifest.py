@@ -30,13 +30,19 @@ manifest = {
     },
   },
   "settings": {
-    "socket_mode_enabled": True
+    "socket_mode_enabled": True,
+    "event_subscriptions": {
+      "bot_events": [
+        "connections"
+      ]
+    },
   },
   "oauth_config": {
     "scopes": {
       "bot": [
         "chat:write",
-        "chat:write.public"
+        "chat:write.public",
+        "connections:write",
       ]
     },
     "redirect_urls": [
