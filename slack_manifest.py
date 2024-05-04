@@ -1,7 +1,9 @@
-from os import environ
+import os
+from dotenv import load_dotenv
 from slack_bolt import App
 
-TOKEN=environ["TOKEN"]
+load_dotenv(".env")
+TOKEN = os.getenv('TOKEN')
 
 app = App(token=TOKEN)
 
