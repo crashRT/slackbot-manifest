@@ -2,63 +2,80 @@ import os
 from dotenv import load_dotenv
 from slack_bolt import App
 
+# BOT_NUMの数だけSlack Appを作成する
+BOT_NUM = 1
+
 load_dotenv(".env")
 TOKEN = os.getenv('TOKEN')
 
 app = App(token=TOKEN)
 
-manifest = {
-  "display_information": {
-      "name": "Test Manifest App",
+
+
+for i in range(BOT_NUM):
+
+  app_name = "SlackBot-team" + str(i)
+
+  # まずアプリを作成
+  init_manifest = {
+    "display_information": {
+        "name": app_name,
+    }
   }
-}
-resp = app.client.apps_manifest_create(token=TOKEN, manifest=manifest)
 
-if not resp["ok"]:
-    raise Exception(resp)
+  resp = app.client.apps_manifest_create(token=TOKEN, manifest=init_manifest)
 
-app_credentials = resp["credentials"]
-app_id = resp["app_id"]
+  if not resp["ok"]:
+      raise Exception(resp)
 
-manifest = {
-  "display_information": {
-      "name": "Test Manifest App",
-  },
-  "features": {
-    "bot_user": {
-        "display_name":"hoge"
+  app_id = resp["app_id"]
+  oauth_url = resp["oauth_authorize_url"]
+
+  # 受け取った app_id と oauth_redirect_url を使って、manifest を更新
+  # 権限の追加などを行う
+  # TOKENは管理画面から取得するしかない
+
+  manifest = {
+    "display_information": {
+        "name": "Test Manifest App",
     },
-  },
-  "settings": {
-    "socket_mode_enabled": True,
-    "event_subscriptions": {
-      "bot_events": [
-        "connections"
+    "features": {
+      "bot_user": {
+          "display_name":"hoge"
+      },
+    },
+    "settings": {
+      "socket_mode_enabled": True,
+      "event_subscriptions": {
+        "bot_events": [
+        ]
+      },
+    },
+    "oauth_config": {
+      "scopes": {
+        "bot": [
+          "chat:write",
+          "chat:write.public",
+        ]
+      },
+      "redirect_urls": [
+        str(oauth_url)
       ]
-    },
-  },
-  "oauth_config": {
-    "scopes": {
-      "bot": [
-        "chat:write",
-        "chat:write.public",
-        "connections:write",
-      ]
-    },
-    "redirect_urls": [
-      "https://slack.com/oauth/v2/authorize?client_id=3069876617.7053870738663"
-    ]
+    }
   }
-}
 
-resp = app.client.apps_manifest_update(
-    token=TOKEN,
-    app_id=app_id,
-    manifest=manifest,
-)
+  resp = app.client.apps_manifest_update(
+      token=TOKEN,
+      app_id=app_id,
+      manifest=manifest,
+  )
 
-print(resp)
+  print("------------------")
+  print(app_name + " を作成しました")
+  print('''
+  トークン等は管理画面から取得してください
+  管理画面：https://api.slack.com/apps/%d
+''', app_id)
 
-# slack のAPIを使ってSlackBotを作成する
-# 必要なトークンはTOKENに格納してある
+
 
