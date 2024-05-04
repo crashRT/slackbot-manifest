@@ -10,8 +10,6 @@ TOKEN = os.getenv('TOKEN')
 
 app = App(token=TOKEN)
 
-
-
 for i in range(BOT_NUM):
 
   app_name = "SlackBot-team" + str(i)
@@ -69,6 +67,9 @@ for i in range(BOT_NUM):
       app_id=app_id,
       manifest=manifest,
   )
+
+  if not resp["ok"]:
+      raise Exception(resp)
 
   print("------------------")
   print(app_name + " を作成しました")
