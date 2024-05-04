@@ -37,7 +37,7 @@ for i in range(BOT_NUM):
 
   manifest = {
     "display_information": {
-        "name": "Test Manifest App",
+        "name": str(app_name),
     },
     "features": {
       "bot_user": {
@@ -74,8 +74,7 @@ for i in range(BOT_NUM):
   print(app_name + " を作成しました")
   print('''
   トークン等は管理画面から取得してください
-  管理画面：https://api.slack.com/apps/%d
-''', app_id)
+  管理画面：https://api.slack.com/apps/'''+app_id)
 
 
 
